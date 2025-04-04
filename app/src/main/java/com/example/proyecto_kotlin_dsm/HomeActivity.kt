@@ -26,10 +26,18 @@ class HomeActivity : AppCompatActivity() {
 
         val logoutButton: Button = findViewById(R.id.logoutButton)
 
+        val actividadesButton: Button = findViewById(R.id.actividadesButton)
+
         // Botón para cerrar sesión
         logoutButton.setOnClickListener {
             auth.signOut()
             startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
+
+        actividadesButton.setOnClickListener {
+            val intent = Intent(this, ActivitiesActivity::class.java)
+            startActivity(intent)
             finish()
         }
 
