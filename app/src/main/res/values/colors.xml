@@ -2,6 +2,19 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="purple_500">#D909EE</color>
-    <color name="teal_700">#27C268</color>
+
+    <color name="white2">#e9e0d1</color>
+    <color name="whitegreen">#91a398</color>
+    <color name="greenlight">#33605a</color>
+    <color name="black2">#070001</color>
+    <color name="brown">#68462b</color>
+    <color name="red">#FF0000</color>
+
+    <!-- Colores opcion#2 -->
+    <color name="dark_blue">#006699</color>
+    <color name="blue">#00A0DC</color>
+    <color name="dark_gray">#313335</color>
+    <color name="gray">#86888A</color>
+    <color name="light_gray">#CACCCE</color>
+
 </resources>
