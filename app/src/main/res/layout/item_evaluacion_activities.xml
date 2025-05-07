@@ -4,12 +4,13 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:paddingTop="8dp"
-    android:paddingBottom="8dp">
+    android:paddingBottom="8dp"
+    android:gravity="center_vertical">
 
     <!-- Columna: Título y Materia -->
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_weight="6"
+        android:layout_weight="5"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
@@ -17,19 +18,22 @@
             android:id="@+id/tvTitulo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="16sp"
             android:text="Tarea" />
 
         <TextView
             android:id="@+id/tvMateria"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="14sp"
             android:text="Materia" />
     </LinearLayout>
 
     <!-- Columna: Fecha y Hora -->
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_weight="2"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal">
@@ -38,16 +42,20 @@
             android:id="@+id/tvFecha"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#888888"
             android:text="Fecha" />
 
         <TextView
             android:id="@+id/tvHora"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#888888"
             android:text="Hora" />
     </LinearLayout>
 
-    <!-- Columna: Prioridad y valor -->
+    <!-- Columna: Porcentaje -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_weight="2"
@@ -56,9 +64,10 @@
         android:gravity="center_horizontal">
 
         <TextView
-            android:id="@+id/tvPrioridad"
+            android:id="@+id/tvPorcentaje"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Alta" />
+            android:textSize="14sp"
+            android:text="100%" />
     </LinearLayout>
 </LinearLayout>

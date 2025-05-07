@@ -20,7 +20,7 @@ class ActividadAdapter(private val actividades: List<Actividad>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActividadViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_actividad, parent, false)
+            .inflate(R.layout.item_actividad_activities, parent, false)
         return ActividadViewHolder(view)
     }
 
