@@ -39,62 +39,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-
-    <!-- Tabla de actividades -->
-    <LinearLayout
-        android:id="@+id/tbActividades"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/AppBarL"
-        android:orientation="vertical"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp">
-
-        <!-- Cabecera de columnas -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="5"
-                android:layout_height="wrap_content"
-                android:text="Tarea"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <!-- Espacio para Fecha y Hora combinados -->
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content" />
-
-            <!-- Encabezado Prioridad -->
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="2"
-                android:layout_height="wrap_content"
-                android:text="Prioridad"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:gravity="center_horizontal"/>
-        </LinearLayout>
-
-        <!-- RecyclerView que mostrará las actividades -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewActividades"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-
-    </LinearLayout>
-
     <!-- Tabla de evaluaciones -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tbActividades"
+        app:layout_constraintTop_toBottomOf="@id/AppBarL"
         android:orientation="vertical"
         android:layout_marginVertical="10sp"
         android:paddingStart="10dp"

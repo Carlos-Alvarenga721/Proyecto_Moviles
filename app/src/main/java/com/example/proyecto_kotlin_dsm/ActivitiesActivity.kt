@@ -1,38 +1,43 @@
 package com.example.proyecto_kotlin_dsm
 
+import Evaluacion
 import android.app.DatePickerDialog
-import android.app.Dialog
-import android.content.Intent
+import android.app.TimePickerDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.Menu
-import android.view.MenuItem
-import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Spinner
-import android.widget.TextView
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.*
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.proyecto_kotlin_dsm.activitiesAdapter.Actividad
-import com.example.proyecto_kotlin_dsm.activitiesAdapter.ActividadAdapter
-import com.example.proyecto_kotlin_dsm.activitiesAdapter.Evaluacion
 import com.example.proyecto_kotlin_dsm.activitiesAdapter.EvaluacionAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import java.util.Calendar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ActivitiesActivity : AppCompatActivity() {
+
+    private lateinit var recyclerViewEvaluacion: RecyclerView
+    private lateinit var database: DatabaseReference
+    private lateinit var listaEvaluaciones: MutableList<Evaluacion>
+    private lateinit var listaMaterias: ArrayList<String>
+    private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_activities)
+
+        enableEdgeToEdge()
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -42,113 +47,239 @@ class ActivitiesActivity : AppCompatActivity() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val recyclerViewActividad = findViewById<RecyclerView>(R.id.recyclerViewActividades)
-        recyclerViewActividad.layoutManager = LinearLayoutManager(this)
+        // Inicializar Firebase Auth
+        auth = FirebaseAuth.getInstance()
 
-        // Datos temporales
-        val listaActividades = listOf(
-            Actividad("Tarea 1", "12/05", "10:00", "Matemática", "Alta"),
-            Actividad("Tarea 2", "13/05", "14:30", "Historia", "Baja"),
-            Actividad("Tarea 3", "14/05", "08:45","Física", "Media")
-        )
-
-        recyclerViewActividad.adapter = ActividadAdapter(listaActividades)
-
-        val recyclerViewEvaluacion = findViewById<RecyclerView>(R.id.recyclerViewEvaluaciones)
+        recyclerViewEvaluacion = findViewById(R.id.recyclerViewEvaluaciones)
         recyclerViewEvaluacion.layoutManager = LinearLayoutManager(this)
+        listaEvaluaciones = mutableListOf()
+        listaMaterias = ArrayList()
 
-        // Datos temporales
-        val listaEvaluaciones = listOf(
-            Evaluacion("Parcial 1", "Calculo II", "12/05", "10:00", "20%"),
-            Evaluacion("Parcial 1", "POO", "18/05", "16:00", "15%"),
-            Evaluacion("Laboratorio 2", "Física II", "22/05", "08:45", "10%")
-        )
+        // Obtener lista de materias antes de configurar evaluaciones
+        obtenerMateriasDeFirebase()
+        obtenerEvaluacionesDeFirebase()
 
-        recyclerViewEvaluacion.adapter = EvaluacionAdapter(listaEvaluaciones)
-
-        // Boton agregar
-        val addButton = findViewById<FloatingActionButton>(R.id.fab_agregar)
-        addButton.setOnClickListener {
-            mostrarModalAgregarActividad()
+        findViewById<FloatingActionButton>(R.id.fab_agregar).setOnClickListener {
+            mostrarModalAgregarEvaluacion()
         }
     }
 
-    private fun mostrarModalAgregarActividad() {
-        val dialogView = layoutInflater.inflate(R.layout.modal_agregar_actividad, null)
-        val dialog = Dialog(this)
+    private fun obtenerMateriasDeFirebase() {
+        val userId = auth.currentUser?.uid ?: return
+        val materiasRef = FirebaseDatabase.getInstance().getReference("materias").child(userId)
 
-        dialog.setContentView(dialogView)
+        materiasRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                listaMaterias.clear()
+                // Agregar una opción por defecto
+                listaMaterias.add("Seleccione una materia")
+
+                for (materiaSnapshot in snapshot.children) {
+                    val nombreMateria = materiaSnapshot.child("nombre").getValue(String::class.java)
+                    if (nombreMateria != null) {
+                        listaMaterias.add(nombreMateria)
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(
+                    this@ActivitiesActivity,
+                    "Error al cargar materias: ${error.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
+    }
+
+    private fun mostrarModalAgregarEvaluacion() {
+        val builder = AlertDialog.Builder(this)
+        val inflater = LayoutInflater.from(this)
+        val view = inflater.inflate(R.layout.modal_agregar_actividad, null)
+
+        builder.setView(view)
+        val dialog = builder.create()
+
+        // Configurar el fondo del diálogo como transparente para que solo se vea nuestro layout con bordes redondeados
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        dialog.window?.setLayout(
-            (resources.displayMetrics.widthPixels * 0.9).toInt(), // 90% del ancho de pantalla
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        dialog.setCancelable(true)
 
-        // Inicializar elementos
-        val etTitulo = dialogView.findViewById<EditText>(R.id.etTitulo)
-        val contadorTitulo = dialogView.findViewById<TextView>(R.id.contadorTitulo)
+        // Configurar los elementos del modal
+        val etTitulo = view.findViewById<EditText>(R.id.etTitulo)
+        val etDescripcion = view.findViewById<EditText>(R.id.etDescripcion)
+        val spinnerMateria = view.findViewById<Spinner>(R.id.spinnerMateria)
+        val etFecha = view.findViewById<EditText>(R.id.etFecha)
+        val etHora = view.findViewById<EditText>(R.id.etHora)
+        val etPorcentaje = view.findViewById<EditText>(R.id.etPorcentaje)
+        val btnCancelar = view.findViewById<Button>(R.id.btnCancelar)
+        val btnAgregar = view.findViewById<Button>(R.id.btnAgregar)
+        val contadorTitulo = view.findViewById<TextView>(R.id.contadorTitulo)
+        val contadorDescripcion = view.findViewById<TextView>(R.id.contadorDescripcion)
+
+        // Configurar el adaptador para el spinner de materias
+        val materiaAdapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            listaMaterias
+        )
+        materiaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerMateria.adapter = materiaAdapter
+
+        // Configurar el contador de caracteres para el título
         etTitulo.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
                 contadorTitulo.text = "${s?.length ?: 0}/32"
             }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
-        val etDescripcion = dialogView.findViewById<EditText>(R.id.etDescripcion)
-        val contadorDescripcion = dialogView.findViewById<TextView>(R.id.contadorDescripcion)
+        // Configurar el contador de caracteres para la descripción
         etDescripcion.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
                 contadorDescripcion.text = "${s?.length ?: 0}/100"
             }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
-        // Spinner
-        val spinnerPrioridad = dialogView.findViewById<Spinner>(R.id.spinnerPrioridad)
-        val opciones = listOf("Alta", "Media", "Baja")
-        spinnerPrioridad.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, opciones)
-
-        // DatePicker
-        val etFecha = dialogView.findViewById<EditText>(R.id.etFecha)
+        // Configurar el selector de fecha
         etFecha.setOnClickListener {
-            val calendario = Calendar.getInstance()
-            DatePickerDialog(this, { _, y, m, d ->
-                etFecha.setText("$d/${m+1}/$y")
-            }, calendario.get(Calendar.YEAR), calendario.get(Calendar.MONTH), calendario.get(Calendar.DAY_OF_MONTH)).show()
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+            val datePickerDialog = DatePickerDialog(
+                this,
+                { _, selectedYear, selectedMonth, selectedDay ->
+                    val selectedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+                    etFecha.setText(selectedDate)
+                },
+                year, month, day
+            )
+            datePickerDialog.show()
         }
 
-        // Botones
-        dialogView.findViewById<Button>(R.id.btnCancelar).setOnClickListener {
+        // Configurar el selector de hora
+        etHora.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            val hour = calendar.get(Calendar.HOUR_OF_DAY)
+            val minute = calendar.get(Calendar.MINUTE)
+
+            val timePickerDialog = TimePickerDialog(
+                this,
+                { _, selectedHour, selectedMinute ->
+                    val amPm = if (selectedHour < 12) "am" else "pm"
+                    val hour12Format = if (selectedHour == 0) 12 else if (selectedHour > 12) selectedHour - 12 else selectedHour
+                    val selectedTime = String.format("%02d:%02d %s", hour12Format, selectedMinute, amPm)
+                    etHora.setText(selectedTime)
+                },
+                hour, minute, false
+            )
+            timePickerDialog.show()
+        }
+
+        // Configurar campo de porcentaje
+        etPorcentaje.setOnClickListener {
+            val options = arrayOf("5%", "10%", "15%", "20%", "25%", "30%", "40%", "50%")
+            val porcentajeDialog = AlertDialog.Builder(this)
+                .setTitle("Seleccione un porcentaje")
+                .setItems(options) { _, which ->
+                    etPorcentaje.setText(options[which])
+                }
+                .create()
+            porcentajeDialog.show()
+        }
+
+        btnCancelar.setOnClickListener {
             dialog.dismiss()
         }
-        dialogView.findViewById<Button>(R.id.btnAgregar).setOnClickListener {
-            // lógica para agregar actividad
+
+        btnAgregar.setOnClickListener {
+            val titulo = etTitulo.text.toString().trim()
+            val descripcion = etDescripcion.text.toString().trim()
+            val materia = if (spinnerMateria.selectedItemPosition > 0)
+                spinnerMateria.selectedItem.toString() else ""
+            val fecha = etFecha.text.toString()
+            val hora = etHora.text.toString()
+            val porcentaje = etPorcentaje.text.toString()
+
+            if (titulo.isEmpty()) {
+                Toast.makeText(this, "Ingrese un título para la evaluación", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (materia.isEmpty() || materia == "Seleccione una materia") {
+                Toast.makeText(this, "Seleccione una materia", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (fecha.isEmpty()) {
+                Toast.makeText(this, "Seleccione una fecha", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (hora.isEmpty()) {
+                Toast.makeText(this, "Seleccione una hora", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Crear objeto evaluación
+            val evaluacion = Evaluacion(
+                id = "",  // Firebase asignará el ID
+                titulo = titulo,
+                materia = materia,
+                fecha = fecha,
+                hora = hora,
+                porcentaje = porcentaje
+            )
+
+            guardarEvaluacionEnFirebase(evaluacion)
             dialog.dismiss()
         }
 
         dialog.show()
-
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.toolbar_menu, menu)
-        return true
+    private fun guardarEvaluacionEnFirebase(evaluacion: Evaluacion) {
+        val userId = auth.currentUser?.uid ?: return
+        database = FirebaseDatabase.getInstance().getReference("evaluaciones").child(userId)
+        val id = database.push().key ?: return
+
+        // Crear una copia de la evaluación con el ID generado
+        val evaluacionConId = evaluacion.copy(id = id)
+
+        database.child(id).setValue(evaluacionConId)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Evaluación agregada", Toast.LENGTH_SHORT).show()
+                obtenerEvaluacionesDeFirebase()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Error al agregar evaluación: ${it.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_notifications -> {
-                true
+    private fun obtenerEvaluacionesDeFirebase() {
+        val userId = auth.currentUser?.uid ?: return
+        database = FirebaseDatabase.getInstance().getReference("evaluaciones").child(userId)
+
+        database.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                listaEvaluaciones.clear()
+                for (evaluacionSnapshot in snapshot.children) {
+                    val evaluacion = evaluacionSnapshot.getValue(Evaluacion::class.java)
+                    evaluacion?.let { listaEvaluaciones.add(it) }
+                }
+                recyclerViewEvaluacion.adapter = EvaluacionAdapter(listaEvaluaciones)
             }
-            R.id.action_profile -> {
-                true
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(
+                    this@ActivitiesActivity,
+                    "Error al obtener evaluaciones: ${error.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-            else -> super.onOptionsItemSelected(item)
-        }
+        })
     }
 }

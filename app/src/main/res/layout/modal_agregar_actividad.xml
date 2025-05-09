@@ -76,19 +76,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"/>
 
-        <!-- Tipo de Actividad -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Tipo de Actividad"
-            android:textStyle="bold"/>
-
-        <Spinner
-            android:id="@+id/spinnerTipo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"/>
-
         <!-- Fecha -->
         <TextView
             android:layout_width="match_parent"
@@ -104,18 +91,35 @@
             android:hint="Seleccionar fecha"
             android:layout_marginBottom="8dp"/>
 
-        <!-- Prioridad -->
+        <!-- Hora -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Prioridad"
+            android:text="Hora"
             android:textStyle="bold"/>
 
-        <Spinner
-            android:id="@+id/spinnerPrioridad"
+        <EditText
+            android:id="@+id/etHora"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"/>
+            android:focusable="false"
+            android:hint="Indicar la hora"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Porcentaje -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Porcentaje"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/etPorcentaje"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:hint="Indicar porcentaje"
+            android:layout_marginBottom="8dp"/>
 
         <!-- Botones -->
         <LinearLayout

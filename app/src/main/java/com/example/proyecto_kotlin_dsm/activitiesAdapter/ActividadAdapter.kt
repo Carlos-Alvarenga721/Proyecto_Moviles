@@ -1,5 +1,6 @@
 package com.example.proyecto_kotlin_dsm.activitiesAdapter
 
+import Actividad
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
