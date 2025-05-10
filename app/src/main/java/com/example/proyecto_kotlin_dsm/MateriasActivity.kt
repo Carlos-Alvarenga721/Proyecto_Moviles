@@ -11,8 +11,9 @@ import com.google.firebase.database.*
 import androidx.appcompat.app.AlertDialog
 import android.widget.LinearLayout
 import android.widget.EditText
+import com.google.firebase.database.DatabaseError
 
-class MateriasActivity : AppCompatActivity() {
+class MateriasActivity : BaseActivity() {
 
     private lateinit var recyclerMaterias: RecyclerView
     private lateinit var adapter: MateriasAdapter
