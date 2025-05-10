@@ -2,11 +2,10 @@ package com.example.proyecto_kotlin_dsm
 
 import android.os.Bundle
 import android.widget.Spinner
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class DashboardActivity : AppCompatActivity() {
+class DashboardActivity : BaseActivity() { // ← hereda de BaseActivity
 
     private lateinit var rvActividades: RecyclerView
     private lateinit var rvHorarios: RecyclerView
@@ -15,14 +14,15 @@ class DashboardActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_dashboard)
+        setContentView(R.layout.activity_dashboard) // se inyecta en el FrameLayout de BaseActivity
 
+        // Enlazar vistas
         rvActividades = findViewById(R.id.rvActividades)
         rvHorarios = findViewById(R.id.rvHorarios)
         rvNotas = findViewById(R.id.rvNotas)
         spinnerMaterias = findViewById(R.id.spinnerMaterias)
 
-        // Configuración los RecyclerViews con su layout
+        // Configurar RecyclerViews
         rvActividades.layoutManager = LinearLayoutManager(this)
         rvHorarios.layoutManager = LinearLayoutManager(this)
         rvNotas.layoutManager = LinearLayoutManager(this)
