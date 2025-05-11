@@ -1,0 +1,160 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- Imagen del avatar seleccionado -->
+        <ImageView
+            android:id="@+id/profileImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/avatar1"
+            android:layout_marginBottom="16dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/circle_border" />
+
+        <!-- Botón para seleccionar avatar -->
+        <Button
+            android:id="@+id/selectAvatarButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Seleccionar avatar"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Título -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Editar perfil"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:paddingBottom="20dp" />
+
+        <!-- Correo (solo lectura) -->
+        <TextView
+            android:id="@+id/emailText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="correo@ejemplo.com"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Nombre -->
+        <EditText
+            android:id="@+id/nameField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nombre completo"
+            android:textSize="15sp"
+            android:textColorHint="#888888"
+            android:background="@android:color/transparent"
+            android:paddingBottom="10dp"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Universidad -->
+        <EditText
+            android:id="@+id/universityField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Universidad"
+            android:textSize="15sp"
+            android:textColorHint="#888888"
+            android:background="@android:color/transparent"
+            android:paddingBottom="10dp"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Teléfono -->
+        <EditText
+            android:id="@+id/phoneField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Teléfono"
+            android:inputType="phone"
+            android:textSize="15sp"
+            android:textColorHint="#888888"
+            android:background="@android:color/transparent"
+            android:paddingBottom="10dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Botón para mostrar el layout de cambio de contraseña -->
+        <Button
+            android:id="@+id/showChangePasswordLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cambiar contraseña"
+            android:textSize="15sp"
+            android:backgroundTint="@color/black"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Layout oculto para cambio de contraseña -->
+        <LinearLayout
+            android:id="@+id/changePasswordLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/oldPasswordField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Contraseña actual"
+                android:inputType="textPassword"
+                android:textSize="15sp"
+                android:textColorHint="#888888"
+                android:layout_marginBottom="8dp" />
+
+            <EditText
+                android:id="@+id/newPasswordField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nueva contraseña"
+                android:inputType="textPassword"
+                android:textSize="15sp"
+                android:textColorHint="#888888"
+                android:layout_marginBottom="12dp" />
+
+            <Button
+                android:id="@+id/changePasswordButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Actualizar contraseña"
+                android:textSize="15sp"
+                android:backgroundTint="@color/black"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="12dp" />
+
+            <ImageView
+                android:id="@+id/passwordChangeSuccessIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@android:drawable/checkbox_on_background"
+                android:visibility="gone"
+                android:layout_marginTop="4dp"
+                app:tint="@android:color/holo_green_dark" />
+        </LinearLayout>
+
+        <!-- Botón guardar -->
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Guardar"
+            android:textSize="16sp"
+            android:backgroundTint="@color/black"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="8dp" />
+    </LinearLayout>
+</ScrollView>

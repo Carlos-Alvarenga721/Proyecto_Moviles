@@ -55,6 +55,12 @@ open class BaseActivity : AppCompatActivity() {
                     }
                     true
                 }
+                R.id.nav_perfil -> {
+                    if (this !is ProfileActivity) {
+                        startActivity(Intent(this, ProfileActivity::class.java))
+                    }
+                    true
+                }
                 R.id.nav_logout -> {
                     FirebaseAuth.getInstance().signOut()
                     startActivity(Intent(this, LoginActivity::class.java))
