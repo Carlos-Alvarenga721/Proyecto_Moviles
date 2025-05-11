@@ -1,6 +1,7 @@
 package com.example.proyecto_kotlin_dsm.activitiesAdapter
 
 import Evaluacion
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ class EvaluacionAdapter(private val evaluaciones: List<Evaluacion>) :
         val tvPorcentaje: TextView = view.findViewById(R.id.tvPorcentaje)
         val tvMateria: TextView = view.findViewById(R.id.tvMateria)
         val tvHora: TextView = view.findViewById(R.id.tvHora)
+        val tvNota: TextView = view.findViewById(R.id.tvNota)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EvaluacionViewHolder {
@@ -27,11 +29,25 @@ class EvaluacionAdapter(private val evaluaciones: List<Evaluacion>) :
 
     override fun onBindViewHolder(holder: EvaluacionViewHolder, position: Int) {
         val evaluacion = evaluaciones[position]
+
+        // Configurar los campos básicos
         holder.tvTitulo.text = evaluacion.titulo
         holder.tvFecha.text = evaluacion.fecha
-        holder.tvPorcentaje.text = evaluacion.porcentaje  // Asegúrate de tener este campo
+        holder.tvPorcentaje.text = evaluacion.porcentaje
         holder.tvMateria.text = evaluacion.materia
         holder.tvHora.text = evaluacion.hora
+
+        // Configurar la nota con formato según el estado
+        val notaFormateada = String.format("%.1f", evaluacion.nota)
+        holder.tvNota.text = notaFormateada
+
+        if (evaluacion.estado == "Pendiente") {
+            // Para evaluaciones pendientes, mostrar nota en gris
+            holder.tvNota.setTextColor(Color.GRAY)
+        } else {
+            // Para evaluaciones realizadas, mostrar nota en negro
+            holder.tvNota.setTextColor(Color.BLACK)
+        }
     }
 
     override fun getItemCount(): Int = evaluaciones.size

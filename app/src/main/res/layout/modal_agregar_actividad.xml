@@ -121,6 +121,42 @@
             android:hint="Indicar porcentaje"
             android:layout_marginBottom="8dp"/>
 
+        <!-- Estado -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Estado"
+            android:textStyle="bold"/>
+
+        <Spinner
+            android:id="@+id/spinnerEstado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Nota (visible solo cuando estado es pendiente o realizada) -->
+        <LinearLayout
+            android:id="@+id/layoutNota"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nota"
+                android:textStyle="bold"/>
+
+            <EditText
+                android:id="@+id/etNota"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ingrese la nota (0.0 - 10.0)"
+                android:inputType="numberDecimal"
+                android:layout_marginBottom="8dp"/>
+        </LinearLayout>
+
         <!-- Botones -->
         <LinearLayout
             android:layout_width="match_parent"

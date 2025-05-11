@@ -110,6 +110,9 @@ class ActivitiesActivity : AppCompatActivity() {
         val etFecha = view.findViewById<EditText>(R.id.etFecha)
         val etHora = view.findViewById<EditText>(R.id.etHora)
         val etPorcentaje = view.findViewById<EditText>(R.id.etPorcentaje)
+        val spinnerEstado = view.findViewById<Spinner>(R.id.spinnerEstado)
+        val layoutNota = view.findViewById<LinearLayout>(R.id.layoutNota)
+        val etNota = view.findViewById<EditText>(R.id.etNota)
         val btnCancelar = view.findViewById<Button>(R.id.btnCancelar)
         val btnAgregar = view.findViewById<Button>(R.id.btnAgregar)
         val contadorTitulo = view.findViewById<TextView>(R.id.contadorTitulo)
@@ -123,6 +126,33 @@ class ActivitiesActivity : AppCompatActivity() {
         )
         materiaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerMateria.adapter = materiaAdapter
+
+        // Configurar el adaptador para el spinner de estados
+        val estadosArray = arrayOf("Seleccione un estado", "Pendiente", "Realizada")
+        val estadoAdapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            estadosArray
+        )
+        estadoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerEstado.adapter = estadoAdapter
+
+        // Listener para mostrar/ocultar el campo de nota según el estado seleccionado
+        spinnerEstado.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val estadoSeleccionado = estadosArray[position]
+                if (estadoSeleccionado == "Realizada") {
+                    layoutNota.visibility = View.VISIBLE
+                } else {
+                    layoutNota.visibility = View.GONE
+                    etNota.setText("") // lógica secundaria
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                layoutNota.visibility = View.GONE
+            }
+        }
 
         // Configurar el contador de caracteres para el título
         etTitulo.addTextChangedListener(object : TextWatcher {
@@ -203,7 +233,31 @@ class ActivitiesActivity : AppCompatActivity() {
             val fecha = etFecha.text.toString()
             val hora = etHora.text.toString()
             val porcentaje = etPorcentaje.text.toString()
+            val estado = if (spinnerEstado.selectedItemPosition > 0)
+                spinnerEstado.selectedItem.toString() else ""
 
+            // Valor por defecto para nota
+            var nota = 0.0
+
+            // Si el campo de nota está visible, intentar obtener su valor
+            if (layoutNota.visibility == View.VISIBLE) {
+                val notaStr = etNota.text.toString().trim()
+                if (notaStr.isNotEmpty()) {
+                    try {
+                        nota = notaStr.toDouble()
+                        // Validar que la nota esté entre 0 y 10
+                        if (nota < 0.0 || nota > 10.0) {
+                            Toast.makeText(this, "La nota debe estar entre 0 y 10", Toast.LENGTH_SHORT).show()
+                            return@setOnClickListener
+                        }
+                    } catch (e: NumberFormatException) {
+                        Toast.makeText(this, "La nota debe ser un número válido", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
+                }
+            }
+
+            // Validaciones
             if (titulo.isEmpty()) {
                 Toast.makeText(this, "Ingrese un título para la evaluación", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -224,6 +278,16 @@ class ActivitiesActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            if (porcentaje.isEmpty()) {
+                Toast.makeText(this, "Seleccione un porcentaje", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (estado.isEmpty() || estado == "Seleccione un estado") {
+                Toast.makeText(this, "Seleccione un estado", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             // Crear objeto evaluación
             val evaluacion = Evaluacion(
                 id = "",  // Firebase asignará el ID
@@ -231,7 +295,9 @@ class ActivitiesActivity : AppCompatActivity() {
                 materia = materia,
                 fecha = fecha,
                 hora = hora,
-                porcentaje = porcentaje
+                porcentaje = porcentaje,
+                estado = estado,
+                nota = nota
             )
 
             guardarEvaluacionEnFirebase(evaluacion)

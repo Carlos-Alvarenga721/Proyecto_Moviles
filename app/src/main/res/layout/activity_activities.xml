@@ -53,31 +53,37 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="8dp">
 
+            <!-- Encabezado Evaluación (a la izquierda) -->
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="5"
                 android:layout_height="wrap_content"
-                android:text="Evaluacion"
+                android:text="Evaluación"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <!-- Espacio para Fecha y Hora combinados -->
+            <!-- Encabezado Porcentaje (en el centro) -->
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content" />
-
-            <!-- Encabezado Prioridad -->
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="2"
                 android:layout_height="wrap_content"
                 android:text="%"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:gravity="center_horizontal"/>
+                android:gravity="center"/>
+
+            <!-- Encabezado Nota (a la derecha) -->
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Nota"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:gravity="center"/>
         </LinearLayout>
 
         <!-- RecyclerView que mostrará las evaluaciones -->
