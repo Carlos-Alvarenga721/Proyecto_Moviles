@@ -10,6 +10,18 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- Título del modal (Ahora con ID para poder cambiarlo) -->
+        <TextView
+            android:id="@+id/tituloModal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Agregar Actividad"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:paddingBottom="16dp"/>
+
         <!-- Título -->
         <TextView
             android:layout_width="match_parent"

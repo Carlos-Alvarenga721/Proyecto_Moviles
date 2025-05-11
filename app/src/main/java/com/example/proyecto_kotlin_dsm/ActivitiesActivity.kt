@@ -60,7 +60,7 @@ class ActivitiesActivity : AppCompatActivity() {
         obtenerEvaluacionesDeFirebase()
 
         findViewById<FloatingActionButton>(R.id.fab_agregar).setOnClickListener {
-            mostrarModalAgregarEvaluacion()
+            mostrarModalEvaluacion()
         }
     }
 
@@ -92,7 +92,9 @@ class ActivitiesActivity : AppCompatActivity() {
         })
     }
 
-    private fun mostrarModalAgregarEvaluacion() {
+    // Función unificada para mostrar el modal (agregar o editar)
+    private fun mostrarModalEvaluacion(evaluacion: Evaluacion? = null) {
+        val esEdicion = evaluacion != null
         val builder = AlertDialog.Builder(this)
         val inflater = LayoutInflater.from(this)
         val view = inflater.inflate(R.layout.modal_agregar_actividad, null)
@@ -100,8 +102,14 @@ class ActivitiesActivity : AppCompatActivity() {
         builder.setView(view)
         val dialog = builder.create()
 
-        // Configurar el fondo del diálogo como transparente para que solo se vea nuestro layout con bordes redondeados
+        // Configurar el fondo del diálogo como transparente
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        // Cambiar el título del botón según sea agregar o editar
+        val btnAgregar = view.findViewById<Button>(R.id.btnAgregar)
+        if (esEdicion) {
+            btnAgregar.text = "Actualizar"
+        }
 
         // Configurar los elementos del modal
         val etTitulo = view.findViewById<EditText>(R.id.etTitulo)
@@ -114,9 +122,14 @@ class ActivitiesActivity : AppCompatActivity() {
         val layoutNota = view.findViewById<LinearLayout>(R.id.layoutNota)
         val etNota = view.findViewById<EditText>(R.id.etNota)
         val btnCancelar = view.findViewById<Button>(R.id.btnCancelar)
-        val btnAgregar = view.findViewById<Button>(R.id.btnAgregar)
         val contadorTitulo = view.findViewById<TextView>(R.id.contadorTitulo)
         val contadorDescripcion = view.findViewById<TextView>(R.id.contadorDescripcion)
+
+        // Título del modal (cambia según sea agregar o editar)
+        val tituloModal = view.findViewById<TextView>(R.id.tituloModal)
+        if (tituloModal != null) {
+            tituloModal.text = if (esEdicion) "Editar Actividad" else "Agregar Actividad"
+        }
 
         // Configurar el adaptador para el spinner de materias
         val materiaAdapter = ArrayAdapter(
@@ -145,7 +158,9 @@ class ActivitiesActivity : AppCompatActivity() {
                     layoutNota.visibility = View.VISIBLE
                 } else {
                     layoutNota.visibility = View.GONE
-                    etNota.setText("") // lógica secundaria
+                    if (!esEdicion) {
+                        etNota.setText("") // Solo resetear si no estamos en modo edición
+                    }
                 }
             }
 
@@ -221,6 +236,33 @@ class ActivitiesActivity : AppCompatActivity() {
             porcentajeDialog.show()
         }
 
+        // Si estamos en modo edición, rellenar los campos con los datos existentes
+        if (esEdicion) {
+            etTitulo.setText(evaluacion?.titulo)
+            etDescripcion.setText(evaluacion?.descripcion ?: "")  // Asumiendo que añadirás el campo descripción
+            etFecha.setText(evaluacion?.fecha)
+            etHora.setText(evaluacion?.hora)
+            etPorcentaje.setText(evaluacion?.porcentaje)
+
+            // Seleccionar la materia correcta en el spinner
+            val materiaIndex = listaMaterias.indexOf(evaluacion?.materia)
+            if (materiaIndex >= 0) {
+                spinnerMateria.setSelection(materiaIndex)
+            }
+
+            // Seleccionar el estado correcto en el spinner
+            val estadoIndex = estadosArray.indexOf(evaluacion?.estado)
+            if (estadoIndex >= 0) {
+                spinnerEstado.setSelection(estadoIndex)
+            }
+
+            // Si el estado es "Realizada", mostrar y establecer la nota
+            if (evaluacion?.estado == "Realizada") {
+                layoutNota.visibility = View.VISIBLE
+                etNota.setText(evaluacion.nota.toString())
+            }
+        }
+
         btnCancelar.setOnClickListener {
             dialog.dismiss()
         }
@@ -289,9 +331,10 @@ class ActivitiesActivity : AppCompatActivity() {
             }
 
             // Crear objeto evaluación
-            val evaluacion = Evaluacion(
-                id = "",  // Firebase asignará el ID
+            val nuevaEvaluacion = Evaluacion(
+                id = evaluacion?.id ?: "",  // Usar ID existente en caso de edición
                 titulo = titulo,
+                descripcion = descripcion,
                 materia = materia,
                 fecha = fecha,
                 hora = hora,
@@ -300,7 +343,12 @@ class ActivitiesActivity : AppCompatActivity() {
                 nota = nota
             )
 
-            guardarEvaluacionEnFirebase(evaluacion)
+            if (esEdicion) {
+                actualizarEvaluacionEnFirebase(nuevaEvaluacion)
+            } else {
+                guardarEvaluacionEnFirebase(nuevaEvaluacion)
+            }
+
             dialog.dismiss()
         }
 
@@ -325,6 +373,23 @@ class ActivitiesActivity : AppCompatActivity() {
             }
     }
 
+    private fun actualizarEvaluacionEnFirebase(evaluacion: Evaluacion) {
+        val userId = auth.currentUser?.uid ?: return
+        val evaluacionId = evaluacion.id
+        if (evaluacionId.isEmpty()) return
+
+        database = FirebaseDatabase.getInstance().getReference("evaluaciones").child(userId)
+
+        database.child(evaluacionId).setValue(evaluacion)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Evaluación actualizada", Toast.LENGTH_SHORT).show()
+                obtenerEvaluacionesDeFirebase()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Error al actualizar evaluación: ${it.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
     private fun obtenerEvaluacionesDeFirebase() {
         val userId = auth.currentUser?.uid ?: return
         database = FirebaseDatabase.getInstance().getReference("evaluaciones").child(userId)
@@ -336,7 +401,11 @@ class ActivitiesActivity : AppCompatActivity() {
                     val evaluacion = evaluacionSnapshot.getValue(Evaluacion::class.java)
                     evaluacion?.let { listaEvaluaciones.add(it) }
                 }
-                recyclerViewEvaluacion.adapter = EvaluacionAdapter(listaEvaluaciones)
+                // Actualizar el adaptador con la nueva lista y el listener para manejar clicks
+                recyclerViewEvaluacion.adapter = EvaluacionAdapter(listaEvaluaciones) { evaluacion ->
+                    // Este lambda se ejecuta cuando se hace clic en un elemento
+                    mostrarModalEvaluacion(evaluacion)
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {

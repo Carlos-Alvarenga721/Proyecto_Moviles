@@ -1,7 +1,7 @@
-
 data class Evaluacion(
-    val id: String = "",        // <--- este campo es el key de Firebase
+    val id: String = "",
     val titulo: String = "",
+    val descripcion: String = "",
     val materia: String = "",
     val fecha: String = "",
     val hora: String = "",

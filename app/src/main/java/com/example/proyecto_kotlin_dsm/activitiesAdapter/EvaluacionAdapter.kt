@@ -9,8 +9,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.proyecto_kotlin_dsm.R
 
-class EvaluacionAdapter(private val evaluaciones: List<Evaluacion>) :
-    RecyclerView.Adapter<EvaluacionAdapter.EvaluacionViewHolder>() {
+class EvaluacionAdapter(
+    private val evaluaciones: List<Evaluacion>,
+    private val onItemClick: (Evaluacion) -> Unit
+) : RecyclerView.Adapter<EvaluacionAdapter.EvaluacionViewHolder>() {
 
     inner class EvaluacionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvTitulo: TextView = view.findViewById(R.id.tvTitulo)
@@ -19,6 +21,16 @@ class EvaluacionAdapter(private val evaluaciones: List<Evaluacion>) :
         val tvMateria: TextView = view.findViewById(R.id.tvMateria)
         val tvHora: TextView = view.findViewById(R.id.tvHora)
         val tvNota: TextView = view.findViewById(R.id.tvNota)
+
+        init {
+            // Configurar listener de clic para todo el elemento
+            view.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    onItemClick(evaluaciones[position])
+                }
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EvaluacionViewHolder {
