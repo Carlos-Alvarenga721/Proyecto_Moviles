@@ -24,7 +24,7 @@ import com.google.firebase.database.*
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ActivitiesActivity : AppCompatActivity() {
+class ActivitiesActivity : BaseActivity() {
 
     private lateinit var recyclerViewEvaluacion: RecyclerView
     private lateinit var database: DatabaseReference
@@ -36,16 +36,11 @@ class ActivitiesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_activities)
 
-        enableEdgeToEdge()
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
 
         // Inicializar Firebase Auth
         auth = FirebaseAuth.getInstance()

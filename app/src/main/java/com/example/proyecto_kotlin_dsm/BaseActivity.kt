@@ -55,6 +55,12 @@ open class BaseActivity : AppCompatActivity() {
                     }
                     true
                 }
+                R.id.nav_evaluaciones -> {
+                    if (this !is ActivitiesActivity) {
+                        startActivity(Intent(this, ActivitiesActivity::class.java))
+                    }
+                    true
+                }
                 R.id.nav_perfil -> {
                     if (this !is ProfileActivity) {
                         startActivity(Intent(this, ProfileActivity::class.java))
