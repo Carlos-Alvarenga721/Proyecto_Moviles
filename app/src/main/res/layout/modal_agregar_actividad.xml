@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_modal_con_borde"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Título del modal (Ahora con ID para poder cambiarlo) -->
+        <TextView
+            android:id="@+id/tituloModal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Agregar Actividad"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:paddingBottom="16dp"/>
+
+        <!-- Título -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Título de la Actividad"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingBottom="4dp"/>
+
+        <EditText
+            android:id="@+id/etTitulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingrese el título"
+            android:maxLength="32"
+            android:inputType="text"/>
+
+        <TextView
+            android:id="@+id/contadorTitulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="0/32"
+            android:gravity="end"
+            android:textSize="12sp"
+            android:paddingTop="2dp"
+            android:paddingBottom="8dp"/>
+
+        <!-- Descripción -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Descripción"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/etDescripcion"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:hint="Ingrese una descripción"
+            android:maxLength="100"
+            android:gravity="top"
+            android:inputType="textMultiLine"/>
+
+        <TextView
+            android:id="@+id/contadorDescripcion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="0/100"
+            android:gravity="end"
+            android:textSize="12sp"
+            android:paddingTop="2dp"
+            android:paddingBottom="8dp"/>
+
+        <!-- Materia -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Materia"
+            android:textStyle="bold"/>
+
+        <Spinner
+            android:id="@+id/spinnerMateria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Fecha -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fecha"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/etFecha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:hint="Seleccionar fecha"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Hora -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hora"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/etHora"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:hint="Indicar la hora"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Porcentaje -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Porcentaje"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/etPorcentaje"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:hint="Indicar porcentaje"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Estado -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Estado"
+            android:textStyle="bold"/>
+
+        <Spinner
+            android:id="@+id/spinnerEstado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Nota (visible solo cuando estado es pendiente o realizada) -->
+        <LinearLayout
+            android:id="@+id/layoutNota"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nota"
+                android:textStyle="bold"/>
+
+            <EditText
+                android:id="@+id/etNota"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ingrese la nota (0.0 - 10.0)"
+                android:inputType="numberDecimal"
+                android:layout_marginBottom="8dp"/>
+        </LinearLayout>
+
+        <!-- Botones -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end">
+
+            <Button
+                android:id="@+id/btnCancelar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancelar"
+                android:textColor="@android:color/black"
+                android:background="@drawable/boton_cancelar"
+                android:layout_marginEnd="8dp"/>
+
+            <Button
+                android:id="@+id/btnAgregar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Agregar"
+                android:textColor="@android:color/white"
+                android:background="@drawable/boton_agregar"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
