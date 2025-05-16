@@ -28,6 +28,12 @@
             android:name=".AddMateriaActivity"
             android:exported="false" />
         <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DashboardActivity"
+            android:exported="false" />
+        <activity
             android:name=".ActivitiesActivity"
             android:exported="false"
             android:theme="@style/Theme.Proyecto_Kotlin_DSM" />
