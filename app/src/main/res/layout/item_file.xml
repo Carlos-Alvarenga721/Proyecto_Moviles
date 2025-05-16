@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="12dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
+
+    <ImageView
+        android:id="@+id/imageViewFileIcon"
+        android:layout_width="57dp"
+        android:layout_height="55dp"
+        android:src="@drawable/book" />
+
+    <TextView
+        android:id="@+id/textViewFileName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_weight="1"
+        android:text="Archivo.pdf"
+        android:textSize="16sp" />
+</LinearLayout>
