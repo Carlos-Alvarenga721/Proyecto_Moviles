@@ -4,6 +4,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.view.ContextMenu
+import android.view.MenuItem
+import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -41,10 +44,11 @@ class PersonalStorage : AppCompatActivity() {
             insets
         }
 
+
         val user = FirebaseAuth.getInstance().currentUser
         val uid = user?.uid ?: ""
 
-        if (uid != null) {
+        if (uid.isNotEmpty()) {
             storageRoot = File(getExternalFilesDir(null), "CarpetasUsuario/$uid")
             if (!storageRoot.exists()) storageRoot.mkdirs()
         } else {
@@ -55,17 +59,6 @@ class PersonalStorage : AppCompatActivity() {
 
 
         folderList = getFoldersFromStorage()
-
-        //EsTO SI SERVIA ANTES
-        /*
-        adapter =  FolderAdapter(folderList, { folder ->
-            // Acción cuando se hace click corto en la carpeta (ver el contenido)
-            openFolderContents(folder)
-        }, { folder ->
-            // Acción cuando se hace click largo (subir archivo)
-            selectedFolderForFile = File(storageRoot, folder.name)
-            openFilePicker()
-        })*/
 
         adapter = FolderAdapter(folderList, { folder ->
             val intent = Intent(this, FolderContentsActivity::class.java)
@@ -81,6 +74,8 @@ class PersonalStorage : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerViewFolders)
         recyclerView.layoutManager = androidx.recyclerview.widget.GridLayoutManager(this, 2)
         recyclerView.adapter = adapter
+
+        registerForContextMenu(recyclerView)
 
         val fabAgregar = findViewById<FloatingActionButton>(R.id.fab_agregar)
         fabAgregar.setOnClickListener {
@@ -190,5 +185,52 @@ class PersonalStorage : AppCompatActivity() {
             }
         }
         return result
+    }
+
+    // Menú contextual
+    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+        if (v.id == R.id.recyclerViewFolders) {
+            menu.setHeaderTitle("Opciones")
+            menu.add(0, v.id, 0, "Eliminar carpeta")
+            menu.add(0, v.id, 1, "Subir archivo")
+        }
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        val position = adapter.getPositionForContextMenu()
+        return when (item.title) {
+            "Eliminar carpeta" -> {
+                deleteFolderAt(position)
+                true
+            }
+            "Subir archivo" -> {
+                selectedFolderForFile = File(storageRoot, folderList[position].name)
+                openFilePicker()
+                true
+            }
+            else -> super.onContextItemSelected(item)
+        }
+    }
+
+    private fun deleteFolderAt(position: Int) {
+        val folder = folderList[position]
+        val folderFile = File(storageRoot, folder.name)
+        if (folderFile.exists()) {
+            if (deleteFolder(folderFile)) {
+                folderList.removeAt(position)
+                adapter.notifyItemRemoved(position)
+                Toast.makeText(this, "Carpeta eliminada", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "No se pudo eliminar la carpeta", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun deleteFolder(folder: File): Boolean {
+        if (folder.isDirectory) {
+            folder.listFiles()?.forEach { deleteFolder(it) }
+        }
+        return folder.delete()
     }
 }

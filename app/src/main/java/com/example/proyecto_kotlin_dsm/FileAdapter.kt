@@ -12,6 +12,10 @@ class FileAdapter(
     private val onClick: (FileItem) -> Unit
 ) : RecyclerView.Adapter<FileAdapter.FileViewHolder>() {
 
+    private var positionForContextMenu = -1
+
+    fun getPositionForContextMenu(): Int = positionForContextMenu
+
     inner class FileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val icon: ImageView = itemView.findViewById(R.id.imageViewFileIcon)
         val name: TextView = itemView.findViewById(R.id.textViewFileName)
@@ -23,10 +27,20 @@ class FileAdapter(
     }
 
     override fun onBindViewHolder(holder: FileViewHolder, position: Int) {
-        val fileItem = files[position]
+        val fileItem = files[holder.adapterPosition] // Usa holder.adapterPosition en lugar de position
         holder.name.text = fileItem.file.name
+
         holder.itemView.setOnClickListener { onClick(fileItem) }
-        // Opcional: cambiar ícono según tipo (pdf, imagen, etc.)
+
+        // Acción de click largo para mostrar el menú contextual
+        holder.itemView.setOnLongClickListener {
+            positionForContextMenu = holder.adapterPosition  // Usa holder.adapterPosition
+            false // No invocamos ningún método extra para mostrar el menú
+        }
+
+        holder.itemView.setOnCreateContextMenuListener { menu, v, menuInfo ->
+            positionForContextMenu = holder.adapterPosition  // Usa holder.adapterPosition
+        }
     }
 
     override fun getItemCount() = files.size

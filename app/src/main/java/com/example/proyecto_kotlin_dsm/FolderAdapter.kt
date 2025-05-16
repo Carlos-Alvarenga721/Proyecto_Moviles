@@ -13,6 +13,9 @@ class FolderAdapter(
     private val onLongClick: (Folder) -> Unit // Añadimos la acción de click largo
 ) : RecyclerView.Adapter<FolderAdapter.FolderViewHolder>() {
 
+    private var positionForContextMenu = -1
+    fun getPositionForContextMenu(): Int = positionForContextMenu
+
     class FolderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.imageViewFolder)
         val textView: TextView = itemView.findViewById(R.id.textViewFolderName)
@@ -27,15 +30,21 @@ class FolderAdapter(
         val folder = folders[position]
         holder.textView.text = folder.name
 
-        // Acción de click corto
         holder.itemView.setOnClickListener { onClick(folder) }
 
-        // Acción de click largo
+        /*
         holder.itemView.setOnLongClickListener {
+            positionForContextMenu = holder.adapterPosition  // Usar adapterPosition aquí
             onLongClick(folder)
-            true // Para indicar que el evento ha sido manejado
+            false // para que se muestre también el menú contextual
+        }*/
+
+        holder.itemView.setOnCreateContextMenuListener { menu, v, menuInfo ->
+            positionForContextMenu = holder.adapterPosition  // Y aquí también
         }
     }
 
     override fun getItemCount() = folders.size
+
+
 }
