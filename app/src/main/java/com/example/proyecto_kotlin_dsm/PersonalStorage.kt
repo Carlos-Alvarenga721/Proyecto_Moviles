@@ -41,33 +41,38 @@ class PersonalStorage : AppCompatActivity() {
             insets
         }
 
+        val user = FirebaseAuth.getInstance().currentUser
+        val uid = user?.uid ?: ""
 
+        if (uid != null) {
+            storageRoot = File(getExternalFilesDir(null), "CarpetasUsuario/$uid")
+            if (!storageRoot.exists()) storageRoot.mkdirs()
+        } else {
+            // Manejar el caso cuando no hay usuario logueado (por seguridad o mostrar error)
+            Toast.makeText(this, "No se encontró usuario autenticado", Toast.LENGTH_SHORT).show()
+            finish()  // Opcional: cerrar actividad o redirigir
+        }
 
-        // Inicializamos el directorio base de carpetas
-        storageRoot = File(getExternalFilesDir(null), "CarpetasUsuario")
-        if (!storageRoot.exists()) storageRoot.mkdirs()
 
         folderList = getFoldersFromStorage()
 
+        //EsTO SI SERVIA ANTES
         /*
-        adapter = FolderAdapter(folderList) { folder ->
-            val intent = Intent(this, FolderContentsActivity::class.java)
-            intent.putExtra("folder_name", folder.name)
-            startActivity(intent)
-
-        }*/
-
-/*
-        adapter = FolderAdapter(folderList) { folder ->
-            selectedFolderForFile = File(storageRoot, folder.name)
-            openFilePicker()
-        }*/
-
         adapter =  FolderAdapter(folderList, { folder ->
             // Acción cuando se hace click corto en la carpeta (ver el contenido)
             openFolderContents(folder)
         }, { folder ->
             // Acción cuando se hace click largo (subir archivo)
+            selectedFolderForFile = File(storageRoot, folder.name)
+            openFilePicker()
+        })*/
+
+        adapter = FolderAdapter(folderList, { folder ->
+            val intent = Intent(this, FolderContentsActivity::class.java)
+            intent.putExtra("folder_name", folder.name)
+            intent.putExtra("user_uid", uid)
+            startActivity(intent)
+        }, { folder ->
             selectedFolderForFile = File(storageRoot, folder.name)
             openFilePicker()
         })

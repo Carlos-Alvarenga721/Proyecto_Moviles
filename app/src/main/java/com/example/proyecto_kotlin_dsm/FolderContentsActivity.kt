@@ -25,8 +25,18 @@ class FolderContentsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_folder_contents)
 
         val folderName = intent.getStringExtra("folder_name") ?: return finish()
+        val uid = intent.getStringExtra("user_uid") ?: return finish()
 
+  //ESTO SERVIA ANTES
+/*
         folder = File(getExternalFilesDir(null), "CarpetasUsuario/$folderName")
+        if (!folder.exists() || !folder.isDirectory) {
+            Toast.makeText(this, "La carpeta no existe", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }*/
+
+        folder = File(getExternalFilesDir(null), "CarpetasUsuario/$uid/$folderName")
         if (!folder.exists() || !folder.isDirectory) {
             Toast.makeText(this, "La carpeta no existe", Toast.LENGTH_SHORT).show()
             finish()
