@@ -6,28 +6,30 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.proyecto_kotlin_dsm.R
-import com.example.proyecto_kotlin_dsm.models.Horario
+import com.example.proyecto_kotlin_dsm.models.Materia
 
-class HorarioAdapter(private val lista: List<Horario>) : RecyclerView.Adapter<HorarioAdapter.ViewHolder>() {
+class HorarioAdapter(private val lista: List<Materia>) :
+    RecyclerView.Adapter<HorarioAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val txtCodigo: TextView = view.findViewById(R.id.txtCodigo)
         val txtMateria: TextView = view.findViewById(R.id.txtMateria)
         val txtDocente: TextView = view.findViewById(R.id.txtDocente)
         val txtHora: TextView = view.findViewById(R.id.txtHora)
+        val txtUbicacion: TextView = view.findViewById(R.id.txtCodigo)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.item_horario, parent, false)
+        val v = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_horario, parent, false)
         return ViewHolder(v)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = lista[position]
-        holder.txtCodigo.text = item.codigo
-        holder.txtMateria.text = item.materia
+        holder.txtMateria.text = item.nombre
         holder.txtDocente.text = item.docente
-        holder.txtHora.text = item.hora
+        holder.txtHora.text = "${item.dia}, ${item.horario}"
+        holder.txtUbicacion.text = item.ubicacion
     }
 
     override fun getItemCount(): Int = lista.size
