@@ -61,6 +61,12 @@ open class BaseActivity : AppCompatActivity() {
                     }
                     true
                 }
+                R.id.nav_storage-> {
+                    if (this !is PersonalStorage) {
+                        startActivity(Intent(this, PersonalStorage::class.java))
+                    }
+                    true
+                }
                 R.id.nav_perfil -> {
                     if (this !is ProfileActivity) {
                         startActivity(Intent(this, ProfileActivity::class.java))
