@@ -6,9 +6,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.proyecto_kotlin_dsm.R
-import com.example.proyecto_kotlin_dsm.models.Actividad
+import com.example.proyecto_kotlin_dsm.models.Evaluacion
 
-class ActividadAdapter(private val lista: List<Actividad>) : RecyclerView.Adapter<ActividadAdapter.ViewHolder>() {
+class ActividadAdapter(private val lista: List<Evaluacion>) :
+    RecyclerView.Adapter<ActividadAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val titulo: TextView = view.findViewById(R.id.txtTitulo)
@@ -17,14 +18,15 @@ class ActividadAdapter(private val lista: List<Actividad>) : RecyclerView.Adapte
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.item_actividad, parent, false)
+        val v = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_actividad, parent, false)
         return ViewHolder(v)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = lista[position]
         holder.titulo.text = item.titulo
-        holder.mensaje.text = item.mensaje
+        holder.mensaje.text = item.descripcion
         holder.fecha.text = item.fecha
     }
 
