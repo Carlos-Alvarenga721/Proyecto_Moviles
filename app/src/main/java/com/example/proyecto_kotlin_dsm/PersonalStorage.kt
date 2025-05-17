@@ -23,7 +23,7 @@ import java.io.File
 import kotlin.compareTo
 
 
-class PersonalStorage : AppCompatActivity() {
+class PersonalStorage : BaseActivity() {
 
     private lateinit var adapter: FolderAdapter
     private lateinit var folderList: MutableList<Folder>
@@ -36,7 +36,7 @@ class PersonalStorage : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
         setContentView(R.layout.activity_personal_storage)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

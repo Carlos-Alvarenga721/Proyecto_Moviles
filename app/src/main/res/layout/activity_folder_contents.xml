@@ -18,7 +18,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/blue"
+
             app:navigationIcon="@drawable/arrow_back"
             app:title="Archivos"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
@@ -27,7 +27,6 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewFiles"
         android:layout_width="match_parent"
-        android:background="@color/dark_blue"
         android:layout_height="0dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintTop_toBottomOf="@id/appbar"

@@ -9,6 +9,9 @@
         android:id="@+id/nav_evaluaciones"
         android:title="Evaluaciones" />
     <item
+        android:id="@+id/nav_storage"
+        android:title="Archivos"/>
+    <item
         android:id="@+id/nav_perfil"
         android:title="Perfil"/>
     <item
