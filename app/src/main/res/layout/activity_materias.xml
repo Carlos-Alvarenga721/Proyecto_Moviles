@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#FAFAFA">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Título -->
+        <TextView
+            android:id="@+id/tvTituloMaterias"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Listado de Materias"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal"
+            android:paddingBottom="16dp" />
+
+        <!-- Filtro por día -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Filtrar por día:"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <Spinner
+            android:id="@+id/spinnerDia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/borde_pequeno"
+            android:padding="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Lista de materias -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerMaterias"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:scrollbars="vertical"
+            android:background="@drawable/borde_pequeno"
+            android:padding="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Botón para agregar nueva materia -->
+        <Button
+            android:id="@+id/buttonAgregar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Agregar Materia"
+            android:background="@drawable/borde_grande"
+            android:textColor="@android:color/black"
+            android:padding="10dp" />
+    </LinearLayout>
+</ScrollView>

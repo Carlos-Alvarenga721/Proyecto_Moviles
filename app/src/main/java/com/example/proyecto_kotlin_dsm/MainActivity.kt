@@ -1,13 +1,13 @@
 package com.example.proyecto_kotlin_dsm
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import android.content.Intent
-import android.widget.Button
-import android.widget.TextView
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,6 +15,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
+
+        // Verificar si el usuario ya inició sesión
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser != null) {
+            // Usuario ya logueado, ir directamente al Dashboard
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+            return
+        }
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -27,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
         // Ir a la pantalla de Login
         loginButton.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
+            val intent = Intent(this, DashboardActivity::class.java)
             startActivity(intent)
         }
 
@@ -36,6 +46,5 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
         }
-
     }
 }

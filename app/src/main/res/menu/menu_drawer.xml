@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_dashboard"
+        android:title="Dashboard" />
+    <item
+        android:id="@+id/nav_materias"
+        android:title="Materias" />
+    <item
+        android:id="@+id/nav_evaluaciones"
+        android:title="Evaluaciones" />
+    <item
+        android:id="@+id/nav_storage"
+        android:title="Archivos"/>
+    <item
+        android:id="@+id/nav_perfil"
+        android:title="Perfil"/>
+    <item
+        android:id="@+id/nav_logout"
+        android:title="Cerrar sesión"/>
+</menu>
