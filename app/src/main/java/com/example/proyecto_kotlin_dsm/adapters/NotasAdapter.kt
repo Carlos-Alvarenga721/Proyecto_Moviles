@@ -6,9 +6,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.proyecto_kotlin_dsm.R
-import com.example.proyecto_kotlin_dsm.models.Nota
+import com.example.proyecto_kotlin_dsm.models.Evaluacion
 
-class NotasAdapter(private val lista: List<Nota>) : RecyclerView.Adapter<NotasAdapter.ViewHolder>() {
+class NotasAdapter(private val lista: List<Evaluacion>) :
+    RecyclerView.Adapter<NotasAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val txtActividad: TextView = view.findViewById(R.id.txtActividad)
@@ -18,16 +19,17 @@ class NotasAdapter(private val lista: List<Nota>) : RecyclerView.Adapter<NotasAd
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.item_nota, parent, false)
+        val v = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_nota, parent, false)
         return ViewHolder(v)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = lista[position]
-        holder.txtActividad.text = item.nombreActividad
-        holder.txtCalificacion.text = "%.2f".format(item.calificacion)
-        holder.txtPorcentaje.text = "%.2f%%".format(item.porcentaje)
-        holder.txtNotaGlobal.text = "%.3f".format(item.notaGlobal)
+        holder.txtActividad.text = item.titulo
+        holder.txtCalificacion.text = "%.2f".format(item.nota)
+        holder.txtPorcentaje.text = item.porcentaje
+        holder.txtNotaGlobal.text = "%.2f".format(item.nota) // puedes personalizar esta lógica
     }
 
     override fun getItemCount(): Int = lista.size
