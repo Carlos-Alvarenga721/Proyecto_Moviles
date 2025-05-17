@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <!-- Información de la materia -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:weightSum="6">
+
+        <TextView
+            android:id="@+id/textCodigo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="ASR104"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/textGrupo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:text="01L"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textUbicacion"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.2"
+            android:text="TIC 2"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textDocente"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:text="Oscar Diaz"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textHorario"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:text="07:00 am - 09:00 am"
+            android:textSize="14sp"
+            android:gravity="end" />
+    </LinearLayout>
+
+    <!-- Días -->
+    <TextView
+        android:id="@+id/textDias"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lunes, Miércoles, Viernes"
+        android:textSize="14sp"
+        android:textColor="#555555"
+        android:layout_marginTop="4dp" />
+
+    <!-- Botones de editar y eliminar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+
+        <Button
+            android:id="@+id/buttonEditar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Editar"
+            android:padding="4dp"
+            android:textSize="12sp"
+            android:layout_gravity="end" />
+
+        <Button
+            android:id="@+id/buttonEliminar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Eliminar"
+            android:padding="4dp"
+            android:textSize="12sp"
+            android:layout_gravity="end" />
+    </LinearLayout>
+
+    <!-- Línea divisoria -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#CCCCCC"
+        android:layout_marginTop="8dp" />
+</LinearLayout>
